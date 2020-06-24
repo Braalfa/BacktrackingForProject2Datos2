@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 using namespace std;
 
 
@@ -110,6 +111,40 @@ void backtracking()
     }
 }
 
+template <size_t r, size_t c>
+int* getClosestTrace(int numOfTraces, int (&map)[r][c]){
+    for(int i =0;i<r;i++){
+        for(int j =0;j<c;j++){
+            if(map[i][j]==numOfTraces/2){
+
+            }
+        }
+    }
+}
+
+template <size_t r, size_t c>
+void breadcumbing(int xi, int yi, int (&map)[r][c]){
+    int nextTrace=std::numeric_limits<int>::max();
+    int nx;
+    int ny;
+    if(map[xi][yi]!=0){
+        for (int i=-1;i<2;i++){
+            if(xi+i<r && xi+i>-1){
+                for(int j=-1;j<2;j++){
+                    if(yi+j<c && yi+j>-1 ){
+                        if(map[xi+i][yi+j]<nextTrace){
+                            nextTrace=map[xi+i][yi+j];
+                            nx=xi+i;
+                            ny=yi+j;
+                        }
+                    }
+                }
+            }
+        }
+        //Move or something
+        breadcumbing( nx, ny, map);
+    }
+}
 
 
 int main() {
