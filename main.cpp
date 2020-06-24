@@ -2,7 +2,17 @@
 using namespace std;
 
 
-
+/**
+ * This function marks the neighborhood of (xi,yi) with mark, as long as it hasnt been marked
+ * by previous steps
+ * @tparam r Map rows
+ * @tparam c Map columns
+ * @param xi X position
+ * @param yi Y position
+ * @param map Map
+ * @param mark New mark
+ * @param step Step creating the mark
+ */
 template <size_t r, size_t c>
 void mark(int xi, int yi, int (&map)[r][c], int mark, int step){
     int tmp;
@@ -21,10 +31,9 @@ void mark(int xi, int yi, int (&map)[r][c], int mark, int step){
  *
  * @param xi Current x
  * @param yi Current y
- * @param lsi Last x step taken (-1,0,1)
- * @param lsj Last y step taken (-1,0,1)
  * @param xf Final x (goal)
  * @param yf Final y (goal)
+ * @param step Number of current call to backtracking
  * @param map
  * @param done Boolean pointer that indicates if the goal has been reached
  * @return
@@ -43,16 +52,22 @@ void backtracking2(int xi, int yi, int xf, int yf, int step,int (&map)[r][c], bo
     } else if(map[xi][yi]==1){
         return;
     }else{
-        //Object tries every possible path
+        //The possible steps from here are marked so that they won't be
+        //reached by future calls
         mark(xi, yi, map, step, step);
+        //Object tries every possible path
         for (int i=-1;i<2;i++)
         {
+            //Checking for border
             if(xi+i<r && xi+i>-1){
                for(int j=-1;j<2;j++){
-                    if((i!=0 || j!=0)&&(yi+j<c && yi+j>-1)&&map[xi+i][yi+j]==step){
+                   //Checking for border, checking it's not gonna enter walls or previous marks
+                    if((yi+j<c && yi+j>-1)&&map[xi+i][yi+j]==step){
                         backtracking2(xi+i, yi+j, xf, yf, step+1,map, done);
                         if(*done){
+                            //Unmarks all marks made by this step because of success
                             mark(xi, yi, map, 0, step);
+                            //Marks the right path with a 2
                             map[xi][yi]=2;
                             return;
                         }
@@ -60,26 +75,33 @@ void backtracking2(int xi, int yi, int xf, int yf, int step,int (&map)[r][c], bo
                 }
             }
         }
+        //Unmarks all marks made by this step because it failed
         mark(xi, yi, map, 0, step);
     }
 }
 
-
+//Test function
 void backtracking()
 {
+    //Test Map (1's are walls)
     int map[10][10]={{0,0,1,0,0,0,0,0,1,0},
                      {0,0,1,0,0,0,0,0,1,0},
                      {0,0,1,0,0,0,0,0,1,0},
                      {0,0,1,0,0,1,1,1,1,0},
                      {0,0,1,0,1,1,0,0,0,0},
-                     {0,0,1,0,1,0,0,0,0,0},
-                     {0,0,1,0,1,0,0,0,0,0},
-                     {0,0,1,0,1,1,1,0,0,0},
+                     {0,0,1,0,0,1,1,0,0,0},
                      {0,0,1,0,0,0,1,0,0,0},
+                     {0,0,1,0,1,0,1,0,0,0},
+                     {0,0,1,0,1,0,0,0,0,0},
                      {0,0,1,1,1,1,1,0,0,0}};
-    bool* done = new bool(false) ;
-    backtracking2(0, 5, 8, 5,3, map, done);
 
+    //Calling backtracking
+    bool* done = new bool(false) ;
+    //Note: Steps starts from 3 because 1 and 2 are taken for walls and final path
+    backtracking2(0, 5, 4, 6,3, map, done);
+
+
+    //Prints final map
     for(int i =0;i<10;i++){
         for(int j =0;j<10;j++){
             cout<<std::to_string(map[i][j])+" ";
