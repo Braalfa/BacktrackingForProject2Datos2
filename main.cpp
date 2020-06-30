@@ -1,5 +1,7 @@
 #include <iostream>
 #include <limits>
+#include "TList.h"
+#include "math.h"
 using namespace std;
 
 
@@ -146,8 +148,133 @@ void breadcumbing(int xi, int yi, int (&map)[r][c]){
     }
 }
 
+double f(int xi, int yi, int xf, int yf, int currentSteps){
+    return currentSteps+sqrt(pow(xf-xi,2) +pow(yf-yi,2));
+}
+
+template <size_t r, size_t c>
+int A(int xi, int yi, int xf, int yf, int (&map)[r][c]){
+    double min =std::numeric_limits<double>::max();
+    double minTemp;
+
+    int xmin;
+    int ymin;
+
+    int xtemp;
+    int ytemp;
+
+    int indexPos;
+    string nodeValue;
+
+
+    TList paths=*new TList;
+    TList open=*new TList;
+    TList close=*new TList;
+    TList steps=*new TList;
+
+    steps.addLast("0");
+    paths.addLast(to_string(xi) + ";" + to_string(yi));
+    open.addLast(to_string(xi) + ";" + to_string(yi));
+
+    while(open.largo!=0){
+        min =std::numeric_limits<double>::max();
+        for(int i=0;i<open.largo;i++){
+
+            nodeValue=open.getNodoPos(i)->getValue();
+            indexPos=nodeValue.find_first_of(';');
+            xtemp=std::stoi(nodeValue.substr(0,indexPos));
+            ytemp=std::stoi(nodeValue.substr(indexPos+1,nodeValue.length()-indexPos));
+            minTemp=f(xtemp, ytemp, xf, yf, stoi(steps.getNodoPos(i)->getValue()));
+
+            if(min>minTemp){
+                xmin=xtemp;
+                ymin=ytemp;
+                min=minTemp;
+            }
+        }
+
+        int parentPos=open.getPos(to_string(xmin)+";"+to_string(ymin));
+        open.deletePos(parentPos);
+        close.addLast(to_string(xmin)+";"+to_string(ymin));
+        map[xmin][ymin]=3;
+
+        if(abs(xmin-xf)<2 &&abs(ymin-yf)<2){
+            string path= paths.getNodoPos(parentPos)->getValue()+";";
+            /* while (!path.empty()){
+                indexPos=path.find_first_of(';');
+                xtemp=std::stoi(path.substr(0,indexPos));
+                path=path.substr(indexPos+1, path.length()-indexPos);
+                indexPos=path.find_first_of(';');
+                ytemp=std::stoi(path.substr(0,indexPos));
+                path=path.substr(indexPos+1, path.length()-indexPos);
+                map[xtemp][ytemp]=2;
+            }
+             */
+            return 0;
+        } else{
+            string nodeText;
+            for (int i=-1;i<2;i++){
+                if(xmin+i<r && xmin+i>-1){
+                    for(int j=-1;j<2;j++){
+                        if(ymin+j<c && ymin+j>-1 ) {
+                            if(map[xmin + i][ymin + j] != 1) {
+                                nodeText = to_string(xmin + i) + ";" + to_string(ymin + j);
+                                if (open.getNodoVal(nodeText) == nullptr
+                                    && close.getNodoVal(nodeText) == nullptr) {
+
+                                    map[xmin+i][ymin+j]=2;
+
+                                    open.addLast(nodeText);
+                                    paths.addLast(paths.getNodoPos(parentPos)->getValue()
+                                                  + ";" + nodeText);
+                                    steps.addLast(
+                                            to_string(stoi(steps.getNodoPos(parentPos)->getValue())+1));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for(int i =0;i<10;i++){
+                for(int j =0;j<10;j++){
+                    cout<<std::to_string(map[i][j])+" ";
+                }
+                cout<<""<<endl;
+            }
+            cout<<""<<endl;
+            cout<<""<<endl;
+
+            paths.deletePos(parentPos);
+            steps.deletePos(parentPos);
+        }
+    }
+    return-1;
+}
+
 
 int main() {
-    backtracking();
+
+    int map[10][10]={{0,0,1,0,0,0,0,0,1,0},
+                     {0,0,1,0,0,0,0,0,1,0},
+                     {0,0,1,0,0,0,0,0,1,0},
+                     {0,0,1,0,0,1,1,1,1,0},
+                     {0,0,1,0,1,1,0,0,0,0},
+                     {0,0,1,0,0,1,1,0,0,0},
+                     {0,0,1,0,0,0,1,0,0,0},
+                     {0,0,1,0,1,0,1,0,0,0},
+                     {0,0,1,0,1,0,0,0,0,0},
+                     {0,0,1,1,1,1,1,0,0,0}};
+
+    //Calling backtracking
+    bool* done = new bool(false) ;
+    //Note: Steps starts from 3 because 1 and 2 are taken for walls and final path
+    A(0, 5, 4, 6, map);
+
+    for(int i =0;i<10;i++){
+        for(int j =0;j<10;j++){
+            cout<<std::to_string(map[i][j])+" ";
+        }
+        cout<<""<<endl;
+    }
     return 0;
 }
