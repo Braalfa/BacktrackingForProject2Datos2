@@ -166,17 +166,24 @@ int A(int xi, int yi, int xf, int yf, int (&map)[r][c]){
     int indexPos;
     string nodeValue;
 
-
+    //Lista del camino seguido hasta cada nodo de la lista
     TList paths=*new TList;
+    //Lista de nodos posibles
     TList open=*new TList;
+    //LIsta de nodos evaluados
     TList close=*new TList;
+    //Lista de cantidad de pasos antes de cada nodo
     TList steps=*new TList;
 
+    //Nota: Para steps y paths, el indice es el mismo que tiene el nodo en la open list
+
+    //Se agrega el nodo inicial a las listas
     steps.addLast("0");
     paths.addLast(to_string(xi) + ";" + to_string(yi));
     open.addLast(to_string(xi) + ";" + to_string(yi));
 
     while(open.largo!=0){
+        //Se obtiene el nodo mas prometedor de los que estan en la open list
         min =std::numeric_limits<double>::max();
         for(int i=0;i<open.largo;i++){
 
@@ -193,14 +200,15 @@ int A(int xi, int yi, int xf, int yf, int (&map)[r][c]){
             }
         }
 
+        //Se elimina el nodo escogido de la open list y se agrega a la close list
         int parentPos=open.getPos(to_string(xmin)+";"+to_string(ymin));
         open.deletePos(parentPos);
         close.addLast(to_string(xmin)+";"+to_string(ymin));
-        map[xmin][ymin]=3;
 
+        //Si es el penultimo nodo entonces se termina el programa y se actualiza el mapa con el path
         if(abs(xmin-xf)<2 &&abs(ymin-yf)<2){
             string path= paths.getNodoPos(parentPos)->getValue()+";";
-            /* while (!path.empty()){
+            while (!path.empty()){
                 indexPos=path.find_first_of(';');
                 xtemp=std::stoi(path.substr(0,indexPos));
                 path=path.substr(indexPos+1, path.length()-indexPos);
@@ -209,40 +217,37 @@ int A(int xi, int yi, int xf, int yf, int (&map)[r][c]){
                 path=path.substr(indexPos+1, path.length()-indexPos);
                 map[xtemp][ytemp]=2;
             }
-             */
+
             return 0;
         } else{
             string nodeText;
+            //Se analiza el vecindario del escogido
+            //Los ifs verifican que no se haya salido de la cuadricula
             for (int i=-1;i<2;i++){
                 if(xmin+i<r && xmin+i>-1){
                     for(int j=-1;j<2;j++){
                         if(ymin+j<c && ymin+j>-1 ) {
                             if(map[xmin + i][ymin + j] != 1) {
+
+                                //Si no se ha agregado el nodo entonces se agrega
                                 nodeText = to_string(xmin + i) + ";" + to_string(ymin + j);
+                                int thisParentSteps = stoi(steps.getNodoPos(parentPos)->getValue())+1;
                                 if (open.getNodoVal(nodeText) == nullptr
                                     && close.getNodoVal(nodeText) == nullptr) {
 
-                                    map[xmin+i][ymin+j]=2;
-
+                                    //Se agrega el nodo
                                     open.addLast(nodeText);
+                                    //Se agrega su path copiando el del padre
                                     paths.addLast(paths.getNodoPos(parentPos)->getValue()
                                                   + ";" + nodeText);
-                                    steps.addLast(
-                                            to_string(stoi(steps.getNodoPos(parentPos)->getValue())+1));
+                                    //Se agregan los steps que se llevan sumando los del padre
+                                    steps.addLast(to_string(thisParentSteps));
                                 }
                             }
                         }
                     }
                 }
             }
-            for(int i =0;i<10;i++){
-                for(int j =0;j<10;j++){
-                    cout<<std::to_string(map[i][j])+" ";
-                }
-                cout<<""<<endl;
-            }
-            cout<<""<<endl;
-            cout<<""<<endl;
 
             paths.deletePos(parentPos);
             steps.deletePos(parentPos);
