@@ -10,15 +10,16 @@ using namespace std;
 /**
  * Clase para guardar valores de una lista
  */
+template <class T>
 class TNode {
 private:
-    string value;
+    T value;
 public:
     TNode *next;
     TNode();
-    TNode(string value);
-    string getValue();
-    void setValue(string value);
+    TNode(T value);
+    T getValue();
+    void setValue(T value);
 };
 
 

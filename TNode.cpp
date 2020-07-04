@@ -9,7 +9,8 @@ using namespace std;
 /**
  * Constructor del nodo
  */
-TNode::TNode()
+template <class T>
+TNode<T>::TNode()
 {
     next = nullptr;
 }
@@ -18,17 +19,19 @@ TNode::TNode()
  * Constructor de clase
  * @param data Dato para inicializar la clase
  */
-TNode::TNode(string data)
+template <class T>
+TNode<T>::TNode(T data)
 {
     next = nullptr;
     value = data;
 }
+
 /**
  * Metodo para obtener el valor guardado
  * @return string del valor guardado
  */
-
-string TNode::getValue()
+template <class T>
+T TNode<T>::getValue()
 {
     return  value;
 }
@@ -36,6 +39,8 @@ string TNode::getValue()
  * Metodo para cambiar el valor guardadp
  * @param data Nuevo valor a guardar
  */
-void TNode::setValue(string data) {
+
+template <class T>
+void TNode<T>::setValue(T data) {
     this->value = data;
 }

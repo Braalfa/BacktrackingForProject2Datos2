@@ -7,7 +7,8 @@
 /**
  * Metodo constructor de la lista
  */
-TList::TList()
+template <class T>
+TList<T>::TList()
 {
     first = nullptr;
     largo=0;
@@ -16,7 +17,8 @@ TList::TList()
  * Metodo que retorna el primer nodo de la lista
  * @return Primer nodo de la lista
  */
-TNode* TList::getFirst()
+template <class T>
+TNode<T>* TList<T>::getFirst()
 {
     return this->first;
 }
@@ -25,8 +27,9 @@ TNode* TList::getFirst()
  * @param val Valor a buscar
  * @return Nodo que contiene el valor
  */
-TNode* TList::getNodoVal(string val) {
-    TNode *present = this->first;
+template <class T>
+TNode<T>* TList<T>::getNodoVal(T val) {
+    TNode<T> *present = this->first;
     while (present != nullptr) {
         if(present->getValue() == val)
             return present;
@@ -41,8 +44,9 @@ TNode* TList::getNodoVal(string val) {
  * @param pos Posicion a buscar
  * @return Nodo de la lista
  */
-TNode* TList::getNodoPos(int pos) {
-    TNode *present = this->first;
+template <class T>
+TNode<T>* TList<T>::getNodoPos(int pos) {
+    TNode<T> *present = this->first;
     int i=0;
     while (i != pos){
         present = present->next;
@@ -55,8 +59,9 @@ TNode* TList::getNodoPos(int pos) {
  * @param value Valor a buscar en la TList
  * @return Retorna un entero con la posicion del nodo buscado
  */
-int TList::getPos(string value) {
-    TNode *present = this->first;
+template <class T>
+int TList<T>::getPos(T value) {
+    TNode<T> *present = this->first;
     int i = 0;
     while (present != nullptr) {
         if(present->getValue() == value)
@@ -72,18 +77,19 @@ int TList::getPos(string value) {
  * Funcion para agregar un dato a la lista
  * @param data Dato a agregar
  */
-void TList::addLast(string data)
+template <class T>
+void TList<T>::addLast(T data)
 {
     if(this->first == nullptr){
-        this->first = new TNode(data);
+        this->first = new TNode<T>(data);
         largo +=1;
     }
     else{
-        TNode *present =  this->first;
+        TNode<T> *present =  this->first;
         while(present->next != nullptr){
             present = present->next;
         }
-        present->next = new TNode(data);
+        present->next = new TNode<T>(data);
         largo +=1;
     }
 }
@@ -91,9 +97,10 @@ void TList::addLast(string data)
  * Funcion para eliminar una posicion de la lista
  * @param pos Posicion a eliminar
  */
-void TList::deletePos(int pos) {
-    TNode *temp1 = this->first;
-    TNode *temp2 = this->first->next;
+template <class T>
+void TList<T>::deletePos(int pos) {
+    TNode<T> *temp1 = this->first;
+    TNode<T> *temp2 = this->first->next;
     if(pos == 0){
         this->first = temp1->next;
         largo -=1;
@@ -105,7 +112,7 @@ void TList::deletePos(int pos) {
             temp2 = temp2->next;
             i+=1;
         }
-        TNode *aux = temp2;
+        TNode<T> *aux = temp2;
         if(pos<largo) {
             temp1->next = temp2->next;
         }else{
@@ -120,9 +127,10 @@ void TList::deletePos(int pos) {
  * Metodo para obtener string de la lista
  * @return String con toda la info de la lista
  */
-string TList::printList()
+template <class T>
+string TList<T>::printList()
 {
-    TNode *present = this->first;
+    TNode<T> *present = this->first;
     string values;
     while (present != nullptr) {
         values+=present->getValue()+";";

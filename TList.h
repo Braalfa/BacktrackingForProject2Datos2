@@ -16,18 +16,19 @@ using namespace std;
 /**
  * Clase lista para valores string
  */
+template <class T>
 class TList
 {
 private:
-    TNode *first;
+    TNode<T> *first;
 public:
     int largo;
     TList();
-    TNode* getFirst();
-    TNode* getNodoPos(int pos);
-    TNode* getNodoVal(string val);
-    int getPos(string value);
-    void addLast(string data);
+    TNode<T>* getFirst();
+    TNode<T>* getNodoPos(int pos);
+    TNode<T>* getNodoVal(T val);
+    int getPos(T value);
+    void addLast(T data);
     void deletePos(int pos);
     string printList();
 };
