@@ -15,7 +15,7 @@ double f(int xi, int yi, int xf, int yf, int currentSteps){
     return currentSteps+sqrt(pow(xf-xi,2) +pow(yf-yi,2));
 }
 
-int A(int xi, int yi, int xf, int yf, int map[10][10]){
+string A(int xi, int yi, int xf, int yf, int map[10][10]){
     double min =std::numeric_limits<double>::max();
     double minTemp;
 
@@ -82,7 +82,7 @@ int A(int xi, int yi, int xf, int yf, int map[10][10]){
                 map[xtemp][ytemp]=2;
             }
 
-            return 0;
+            return path;
         } else{
             string nodeText;
             //Se analiza el vecindario del escogido
@@ -117,11 +117,30 @@ int A(int xi, int yi, int xf, int yf, int map[10][10]){
             steps.deletePos(parentPos);
         }
     }
-    return-1;
+    return "null;null";
 }
 
 void Espectro::perseguirA(int map[10][10]) {
-    A(x, y, 2, 3, map);
+    string path;
+    int indexPos;
+    int xtemp;
+    int ytemp;
+
+    bool jugadorMoved=false;
+    bool ended=false;
+    //Crear funcion de chequeo
+    while(!ended && !jugadorMoved){
+        path = A(x, y, 2, 3, map);
+        indexPos=path.find_first_of(';');
+        xtemp=std::stoi(path.substr(0,indexPos));
+        path=path.substr(indexPos+1, path.length()-indexPos);
+        indexPos=path.find_first_of(';');
+        ytemp=std::stoi(path.substr(0,indexPos));
+        path=path.substr(indexPos+1, path.length()-indexPos);
+
+        x=xtemp;
+        y=ytemp;
+    }
 }
 
 template <size_t r, size_t c>

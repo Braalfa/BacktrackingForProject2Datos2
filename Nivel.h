@@ -34,6 +34,9 @@ class Nivel1: Nivel {
                                {0,0,1,0,1,0,0,0,0,0},
                                {0,0,1,1,1,1,1,0,0,0}};
     public:
+        Nivel1(){
+
+        }
         int* getMap() override;
 };
 
@@ -50,6 +53,9 @@ private:
                            {0,0,1,0,1,0,0,0,0,0},
                            {0,0,1,1,1,1,1,0,0,0}};
 public:
+    Nivel2(){
+
+    }
     int* getMap() override;
 };
 
@@ -69,7 +75,6 @@ private:
 public:
     Nivel3(){
         Espectro* e= EspectroFactory::Get(Gris);
-        e.setMap
     }
     int* getMap() override;
 };
