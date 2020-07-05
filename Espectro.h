@@ -23,6 +23,7 @@ class Espectro {
         int y;
         int vistax;
         int vistay;
+        int espectro;
     public:
         virtual ~Espectro() {}
         void perseguirBread(int map[10][10]);
@@ -32,7 +33,16 @@ class Espectro {
         void atacar();
         void morir();
         void iniciar();
+        void patrullar(int map[10][10]);
+        void checkearVision(int map[10][10]);
+
         virtual void habilidad();
+
+        void setY(int y);
+        void setX(int x);
+        int getX();
+        int getY();
+
 };
 
 typedef Espectro* (__stdcall *CreateEspectroFn)(void);

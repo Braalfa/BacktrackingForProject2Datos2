@@ -7,8 +7,19 @@
 #include "TList.h"
 #include "math.h"
 
-void checkearVision(){
+void Espectro::checkearVision(int map[10][10]){
     //if jugador en rango de vision, llamar a breadcumming
+    int r,c=10;
+    for (int i=-vision/2;i<vision/2+1;i++){
+        if(x+i<r && x+i>-1){
+            for(int j=-vision/2;j<vision/2+1;j++){
+                if(y+j<c && y+j>-1){
+
+                }
+            }
+        }
+    }
+
 }
 
 double f(int xi, int yi, int xf, int yf, int currentSteps){
@@ -140,6 +151,7 @@ void Espectro::perseguirA(int map[10][10]) {
 
         x=xtemp;
         y=ytemp;
+        ended=path.empty();
     }
 }
 
@@ -154,7 +166,7 @@ int* getClosestTrace(int numOfTraces, int (&map)[r][c]){
     }
 }
 
-void breadcumbing(int xi, int yi, int map[10][10]){
+void breadcumbing(int xi, int yi, int map[10][10] , Espectro e){
     int nextTrace=std::numeric_limits<int>::max();
     int nx;
     int ny;
@@ -168,19 +180,21 @@ void breadcumbing(int xi, int yi, int map[10][10]){
                             nextTrace=map[xi+i][yi+j];
                             nx=xi+i;
                             ny=yi+j;
+                            e.setX(nx);
+                            e.setY(ny);
                         }
                     }
                 }
             }
         }
         //Move or something
-        breadcumbing( nx, ny, map);
+        breadcumbing( nx, ny, map, e);
     }
 }
 
 void Espectro::perseguirBread(int map[10][10]) {
     //usar a* para llegar hasta punto actual de jugador
-    breadcumbing(x, y, map);
+    breadcumbing(x, y, map, *this);
 }
 
 
@@ -209,17 +223,17 @@ void mark(int xi, int yi, int map[10][10], int mark, int step){
         }
     }
 }
-/**
- *
- * @param xi Current x
- * @param yi Current y
- * @param xf Final x (goal)
- * @param yf Final y (goal)
- * @param step Number of current call to backtracking
- * @param map
- * @param done Boolean pointer that indicates if the goal has been reached
- * @return
- */
+
+void unmark(int map[10][10], int mark){
+    int c,r=10;
+    for(int i=0;i<r;i++){
+        for(int j=0;j<c;j++){
+            if(map[i][j]==mark){
+                map[i][j]=0;
+            }
+        }
+    }
+}
 
 /**
  *
@@ -274,13 +288,65 @@ void volverBacktrAux(int xi, int yi, int xf, int yf, int step,int map[10][10], b
 void Espectro::devolverse(int map[10][10]){
     //Test Map (1's are walls)
     //Calling backtracking
-
+    int r,c=10;
     bool* done = new bool(false) ;
+
     //Note: Steps starts from 3 because 1 and 2 are taken for walls and final path
     volverBacktrAux(x, y, 4, 6,3, map, done);
+    //The results on the map are asigned to the espectro
+    while (x!=4 && y!=6) {
+        for (int i = -1; i < 2; i++) {
+            if (x + i < r && x + i > -1) {
+                for (int j = -1; j < 2; j++) {
+                    if (y + j < c && y + j > -1) {
+                        if (map[x + i][y + j] == 2) {
+                            x += i;
+                            y += j;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    //The map is cleaned
+    unmark(map, 2);
 }
 
+
+void Espectro::setX(int x){
+    this->x=x;
+}
+
+void Espectro::setY(int y){
+    this->y=y;
+}
+int Espectro::getX(){
+    return x;
+}
+int Espectro::getY(){
+    return y;
+}
 void Espectro::atacar() {
+}
+
+void Espectro::patrullar(int map[10][10]){
+    int r,c=10;
+    int lx;
+    int ly;
+    for (int i = -1; i < 2; i++) {
+        if (x + i < r && x + i > -1) {
+            for (int j = -1; j < 2; j++) {
+                if (y + j < c && y + j > -1) {
+                    if (map[x + i][y + j] == espectro && lx!=(x + i) && ly!=(y + j)) {
+                        lx=x;
+                        ly=y;
+                        x += i;
+                        y += j;
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Espectro::recibirGolpe(bool esFrente, int map[10][10]) {
@@ -292,12 +358,13 @@ void Espectro::recibirGolpe(bool esFrente, int map[10][10]) {
 }
 
 void Espectro::morir() {
-
+    delete this;
 }
 
 void Espectro::iniciar() {
 
 }
+
 
 void EspectroGris::habilidad() {
     //no tiene

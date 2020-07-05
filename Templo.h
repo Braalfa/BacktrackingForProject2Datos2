@@ -6,8 +6,11 @@
 #define UNTITLED_TEMPLO_H
 
 
-class Templo {
+#include "Nivel.h"
 
+class Templo {
+    private:
+        const Nivel niveles[3];
 };
 
 
