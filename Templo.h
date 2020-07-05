@@ -10,7 +10,10 @@
 
 class Templo {
     private:
-        const Nivel niveles[3];
+        Nivel Nivel1;
+        Nivel Nivel2;
+        Nivel Nivel3;
+
 };
 
 

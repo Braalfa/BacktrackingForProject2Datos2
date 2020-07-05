@@ -155,17 +155,6 @@ void Espectro::perseguirA(int map[10][10]) {
     }
 }
 
-template <size_t r, size_t c>
-int* getClosestTrace(int numOfTraces, int (&map)[r][c]){
-    for(int i =0;i<r;i++){
-        for(int j =0;j<c;j++){
-            if(map[i][j]==numOfTraces/2){
-
-            }
-        }
-    }
-}
-
 void breadcumbing(int xi, int yi, int map[10][10] , Espectro e){
     int nextTrace=std::numeric_limits<int>::max();
     int nx;
@@ -196,7 +185,6 @@ void Espectro::perseguirBread(int map[10][10]) {
     //usar a* para llegar hasta punto actual de jugador
     breadcumbing(x, y, map, *this);
 }
-
 
 /**
  * This function marks the neighborhood of (xi,yi) with mark, as long as it hasnt been marked
@@ -285,12 +273,12 @@ void volverBacktrAux(int xi, int yi, int xf, int yf, int step,int map[10][10], b
     }
 }
 
+
 void Espectro::devolverse(int map[10][10]){
     //Test Map (1's are walls)
     //Calling backtracking
     int r,c=10;
     bool* done = new bool(false) ;
-
     //Note: Steps starts from 3 because 1 and 2 are taken for walls and final path
     volverBacktrAux(x, y, 4, 6,3, map, done);
     //The results on the map are asigned to the espectro
@@ -300,6 +288,7 @@ void Espectro::devolverse(int map[10][10]){
                 for (int j = -1; j < 2; j++) {
                     if (y + j < c && y + j > -1) {
                         if (map[x + i][y + j] == 2) {
+                            map[x + i][y + j] =0;
                             x += i;
                             y += j;
                         }
@@ -308,10 +297,7 @@ void Espectro::devolverse(int map[10][10]){
             }
         }
     }
-    //The map is cleaned
-    unmark(map, 2);
 }
-
 
 void Espectro::setX(int x){
     this->x=x;
@@ -320,12 +306,15 @@ void Espectro::setX(int x){
 void Espectro::setY(int y){
     this->y=y;
 }
+
 int Espectro::getX(){
     return x;
 }
+
 int Espectro::getY(){
     return y;
 }
+
 void Espectro::atacar() {
 }
 
@@ -337,7 +326,7 @@ void Espectro::patrullar(int map[10][10]){
         if (x + i < r && x + i > -1) {
             for (int j = -1; j < 2; j++) {
                 if (y + j < c && y + j > -1) {
-                    if (map[x + i][y + j] == espectro && lx!=(x + i) && ly!=(y + j)) {
+                    if (map[x + i][y + j] == espectro && (lx!=(x + i) || ly!=(y + j)) ) {
                         lx=x;
                         ly=y;
                         x += i;
@@ -364,7 +353,6 @@ void Espectro::morir() {
 void Espectro::iniciar() {
 
 }
-
 
 void EspectroGris::habilidad() {
     //no tiene
